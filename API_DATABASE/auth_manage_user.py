@@ -34,7 +34,7 @@ def get_user(user_id: int, current_user: user_dependency, db: db_dependency):
 
 
 @auth_manage_user_router.post("/create/", response_model=UserResponse)
-def create_user(user: UserCreate, current_user: user_dependency, db: db_dependency):
+def create_user(user: UserCreate, db: db_dependency):
     if db.query(User).filter(User.email == user.email).first():
         raise HTTPException(status_code=404, detail="User already exists!")
 

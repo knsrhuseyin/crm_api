@@ -2,6 +2,7 @@
 from typing import List, Annotated
 
 from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -29,7 +30,7 @@ def root(current_user: user_dependency, db: db_dependency):
         raise HTTPException(status_code=401, detail='Authentication Failed !')
     elif db is None:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database is inactive !")
-    return {"Current User": current_user}
+    return {"current_user": current_user}
 
 
 @crm_router.get("/users/{user_id}", response_model=UserResponse)
@@ -40,6 +41,13 @@ def get_user(user_id: int, db: db_dependency, current_user: user_dependency):
 
     return user
 
+@crm_router.get("/users/email/{user_email}", response_model=UserResponse)
+def get_user_with_email(user_email: str, db: db_dependency, current_user: user_dependency):
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
 
 @crm_router.post("/users/", response_model=UserResponse)
 def create_user(user: UserCreate, db: db_dependency, current_user: user_dependency):
@@ -62,7 +70,11 @@ def update_user(user_id: int, user: UserCreate, db: db_dependency, current_user:
     for field, value in user.dict().items():
         setattr(db_user, field, value)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        raise HTTPException(status_code=404, detail="User already exists!")
+
     db.refresh(db_user)
     return db_user
 

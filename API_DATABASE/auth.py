@@ -16,7 +16,7 @@ from API_DATABASE.database import auth_db_engine, SessionAuthDB
 # Security Config
 SECRET_KEY = utils.SECRET_KEY
 ALGORITHM = utils.ALGORITHM
-TOKEN_EXPIRES = utils.TOKEN_EXPIRES
+TOKEN_EXPIRES = int(utils.TOKEN_EXPIRES)
 
 print(SECRET_KEY, ALGORITHM, TOKEN_EXPIRES)
 
@@ -60,10 +60,10 @@ def verify_token(token: str) -> TokenData:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
         if email is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not verify creditials", headers={"WW-Authenticate": "Bearer"})
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not verify credentials", headers={"WW-Authenticate": "Bearer"})
         return TokenData(email=email)
     except PyJWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not verify creditials", headers={"WW-Authenticate": "Bearer"})
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not verify credentials", headers={"WW-Authenticate": "Bearer"})
 
 
 # Auth Dependencies
