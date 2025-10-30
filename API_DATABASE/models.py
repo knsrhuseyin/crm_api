@@ -7,6 +7,7 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
+
 # DataBase Model
 class User(Base):
     __tablename__ = "users"
@@ -25,6 +26,7 @@ class UserCreate(BaseModel):
     role: str
     password: str
 
+
 class UserResponse(BaseModel):
     id: int
     name: str
@@ -35,14 +37,17 @@ class UserResponse(BaseModel):
     class ConfigDict:
         from_attributes = True
 
+
 # New Pydantic Models
 class UserLogin(BaseModel):
     email: str
     password: str
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+
 
 class TokenData(BaseModel):
     email: Optional[str] = None

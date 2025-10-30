@@ -1,13 +1,13 @@
-import logging
-from datetime import timedelta, datetime
-from fastapi import APIRouter, HTTPException, Depends, Request
+from datetime import timedelta
+
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 from API_DATABASE.auth import db_dependency, create_access_token, TOKEN_EXPIRES, verify_pwd, get_current_user
 from API_DATABASE.models import User, Token
 
-
 auth_router = APIRouter(prefix="/auth", tags=['auth'])
+
 
 # Auth Endpoints
 @auth_router.post('/token', response_model=Token)
@@ -21,7 +21,7 @@ def login_for_access_token(db: db_dependency, form_data: OAuth2PasswordRequestFo
         raise HTTPException(status_code=404, detail="Inactive User")
 
     access_token_expires = timedelta(minutes=TOKEN_EXPIRES)
-    access_token = create_access_token(data={"sub":user.email}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     response = {"access_token": access_token, "token_type": "bearer"}
     print(response)
     return response
@@ -38,4 +38,3 @@ def verify_token_endpoint(current_user: User = Depends(get_current_user)):
             "role": current_user.role
         }
     }
-

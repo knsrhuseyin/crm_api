@@ -11,13 +11,16 @@ def get_current_active_user(current_user: user_dependency):
         raise HTTPException(status_code=404, detail="Inactive User")
     return current_user
 
+
 auth_manage_user_router = APIRouter(prefix="/auth/user", tags=['Authentication API User Manager'])
+
 
 @auth_manage_user_router.get("/")
 def root(current_user: user_dependency):
     if current_user is None:
         raise HTTPException(status_code=401, detail='Authentication Failed !')
     return {"Current User": current_user}
+
 
 @auth_manage_user_router.get("/profile", response_model=UserResponse)
 def get_profile(current_user: User = Depends(get_current_active_user)):
@@ -87,3 +90,21 @@ def delete_user(user_id: int, current_user: user_dependency, db: db_dependency):
 @auth_manage_user_router.get("/users/", response_model=List[UserResponse])
 def get_all_users(db: db_dependency, current_user: user_dependency):
     return db.query(User).all()
+
+
+@auth_manage_user_router.post("/register", response_model=UserResponse)
+def register_user(user: UserCreate, db: db_dependency):
+    if db.query(User).filter(User.email == user.email).first():
+        raise HTTPException(status_code=404, detail="User already connected")
+
+    hashed_password = get_pwd_hash(user.password)
+    db_user = User(
+        name=user.name,
+        email=user.email,
+        role=user.role,
+        hashed_pwd=hashed_password
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

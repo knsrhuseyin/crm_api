@@ -4,6 +4,7 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
+
 # DataBase Model
 class User(Base):
     __tablename__ = "users"
@@ -22,6 +23,7 @@ class UserCreate(BaseModel):
     email: str
     telephone: str
 
+
 class UserResponse(BaseModel):
     id: int
     name: str
@@ -31,4 +33,3 @@ class UserResponse(BaseModel):
 
     class ConfigDict:
         from_attributes = True
-

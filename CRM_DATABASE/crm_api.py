@@ -1,4 +1,3 @@
-
 from typing import List, Annotated
 
 from fastapi import APIRouter, HTTPException, Depends
@@ -10,8 +9,8 @@ from API_DATABASE.auth import user_dependency
 from CRM_DATABASE.database import crm_DB_engine, SessionCRM
 from CRM_DATABASE.models import UserResponse, UserCreate, User, Base
 
-
 Base.metadata.create_all(bind=crm_DB_engine)
+
 
 def get_db():
     db = SessionCRM()
@@ -20,9 +19,11 @@ def get_db():
     finally:
         db.close()
 
+
 db_dependency = Annotated[Session, Depends(get_db)]
 
 crm_router = APIRouter(prefix="/crm", tags=['CRM Database management'])
+
 
 @crm_router.get("/")
 def root(current_user: user_dependency, db: db_dependency):
@@ -41,6 +42,7 @@ def get_user(user_id: int, db: db_dependency, current_user: user_dependency):
 
     return user
 
+
 @crm_router.get("/users/email/{user_email}", response_model=UserResponse)
 def get_user_with_email(user_email: str, db: db_dependency, current_user: user_dependency):
     user = db.query(User).filter(User.email == user_email).first()
@@ -48,6 +50,7 @@ def get_user_with_email(user_email: str, db: db_dependency, current_user: user_d
         raise HTTPException(status_code=404, detail="User not found")
 
     return user
+
 
 @crm_router.post("/users/", response_model=UserResponse)
 def create_user(user: UserCreate, db: db_dependency, current_user: user_dependency):
@@ -59,6 +62,7 @@ def create_user(user: UserCreate, db: db_dependency, current_user: user_dependen
     db.commit()
     db.refresh(new_user)
     return new_user
+
 
 # Update user
 @crm_router.put("/users/{user_id}", response_model=UserResponse)
