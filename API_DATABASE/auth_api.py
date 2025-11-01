@@ -25,7 +25,7 @@ def login_for_access_token(db: db_dependency, form_data: OAuth2PasswordRequestFo
     """Fonction permettant d'envoyant le jeton à l'utilisateur qui fait la requête.
 
     Args:
-        db (db_dependency): Database de des utilisateurs ayant accès à l'API.
+        db (db_dependency): Database des utilisateurs ayant accès à l'API.
         form_data: Les informations de l'utilisateur ayant fait la requête.
 
     Returns:
