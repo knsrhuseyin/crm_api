@@ -1,3 +1,13 @@
+"""
+database.py
+===========
+
+Module permettant de récupérer la base de donnée du CRM.
+
+Dependencies:
+    sqlalchemy: Module permettant de faire des requêtes SQL.
+"""
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

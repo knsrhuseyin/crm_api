@@ -1,4 +1,13 @@
-# Pydantic Models (Dataclass)
+"""
+models.py
+=========
+
+Module créant les tables de la base de donnée contenant les utilisateurs de l'API.
+
+Dependencies:
+    sqlalchemy: Module permettant de faire des requêtes SQL.
+    pydantic: Module permettant de faire des models SQL.
+"""
 from typing import Optional
 
 from pydantic import BaseModel
@@ -10,6 +19,10 @@ Base = declarative_base()
 
 # DataBase Model
 class User(Base):
+    """Model d'un utilisateur de l'API.
+
+    Hérite de Base.
+    """
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
@@ -21,6 +34,10 @@ class User(Base):
 
 
 class UserCreate(BaseModel):
+    """Model des données nécessaires pour créer un utilisateur.
+
+    Hérite de BaseModel.
+    """
     name: str
     email: str
     role: str
@@ -28,6 +45,10 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
+    """Model de la réponse de l'API lors d'une demande de vérification de l'utilisateur.
+
+    Hérite de BaseModel.
+    """
     id: int
     name: str
     email: str
@@ -35,19 +56,34 @@ class UserResponse(BaseModel):
     is_active: bool
 
     class ConfigDict:
+        """
+        Class interne permet de configurer la forme des données.
+        """
         from_attributes = True
 
 
 # New Pydantic Models
 class UserLogin(BaseModel):
+    """Model des données nécessaires pour se connecter.
+
+    Hérite de BaseModel.
+    """
     email: str
     password: str
 
 
 class Token(BaseModel):
+    """Model de réponse d'un jeton d'accès.
+
+    Hérite de BaseModel.
+    """
     access_token: str
     token_type: str
 
 
 class TokenData(BaseModel):
+    """Model d'une donnée contenu dans le jeton.
+
+    Hérite de BaseModel.
+    """
     email: Optional[str] = None

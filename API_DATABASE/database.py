@@ -1,4 +1,12 @@
-# Database setup
+"""
+database.py
+===========
+
+Module configurant une base de donnée locale permettant l'accès à la base de donnée pour les utilisateurs enregistrés.
+
+Dependencies:
+    sqlalchemy: Module permettant de faire des requêtes SQL.
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

@@ -1,3 +1,12 @@
+"""
+utils.py
+========
+
+Module utilitaire qui récupère les variables d'environnement nécessaire au fonctionnement de l'API.
+
+Dépendencies:
+    dotenv: Module servant à récupérer les variables d'environnement local.
+"""
 import os
 
 from dotenv import load_dotenv

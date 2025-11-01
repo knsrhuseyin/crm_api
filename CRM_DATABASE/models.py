@@ -1,3 +1,14 @@
+"""
+models.py
+=========
+
+Module permettant de créer les models des utilisateurs du CRM.
+
+Dependencies:
+    sqlalchemy: Module permettant de faire des requêtes SQL.
+    pydantic: Module permettant de faire des models SQL.
+"""
+
 from pydantic import BaseModel
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import declarative_base
@@ -7,6 +18,10 @@ Base = declarative_base()
 
 # DataBase Model
 class User(Base):
+    """Model d'un utilisateur du CRM.
+
+    Hérite de Base.
+    """
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
@@ -18,6 +33,10 @@ class User(Base):
 
 # Pydantic Models (Dataclass)
 class UserCreate(BaseModel):
+    """Model des données nécessaires pour créer un utilisateur.
+
+    Hérite de Base.
+    """
     name: str
     first_name: str
     email: str
@@ -25,6 +44,10 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
+    """Model d'une réponse d'un utilisateur du CRM.
+
+    Hérite de BaseModel.
+    """
     id: int
     name: str
     first_name: str
@@ -32,4 +55,7 @@ class UserResponse(BaseModel):
     telephone: str
 
     class ConfigDict:
+        """
+        Class interne permet de configurer la forme des données.
+        """
         from_attributes = True
