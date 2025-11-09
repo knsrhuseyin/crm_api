@@ -4,4 +4,3 @@ venv/
 __pycache__/
 .env
 users.db
-API_DATABASE/auth_manage_user.py
