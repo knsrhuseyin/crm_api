@@ -2,11 +2,12 @@
 main.py
 =======
 
-Module principal permettant l'exécution de l'API via uvicorn.
+Module principal pour l'exécution de l'API via uvicorn.
 
 Dependencies:
-    fastapi: Module principal du programme permettant de créer des API REST avec une documentation créé automatiquement.
+    fastapi: Module principal pour créer des API REST avec documentation automatique.
 """
+
 from fastapi import FastAPI
 
 from API_DATABASE import auth_api
@@ -14,14 +15,18 @@ from CRM_DATABASE import crm_api
 from CRM_CLIENT_MANIFEST import manifest_api
 
 app = FastAPI(title="CRM API", version="1.1.0")
+
+# Inclusion des routers pour les différentes parties de l'API
 app.include_router(auth_api.auth_router)
 app.include_router(crm_api.crm_router)
 app.include_router(manifest_api.manifest_router)
 
 
 @app.get("/")
-def root():
-    """
-    Fonction root de l'API renvoyant un message via une requête à l'URL brute.
+def root() -> dict:
+    """Point d'entrée racine de l'API.
+
+    Returns:
+        dict: Message de bienvenue pour l'API.
     """
     return {"message": "Welcome to CRM API!"}

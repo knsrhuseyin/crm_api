@@ -2,12 +2,14 @@
 models.py
 =========
 
-Module créant les tables de la base de donnée contenant les utilisateurs de l'API.
+Module définissant les tables et modèles Pydantic pour la base de données
+des utilisateurs de l'API.
 
 Dependencies:
-    sqlalchemy: Module permettant de faire des requêtes SQL.
-    pydantic: Module permettant de faire des models SQL.
+    sqlalchemy: Pour définir les modèles SQL et interagir avec la base de données.
+    pydantic: Pour définir les modèles de données et valider les entrées.
 """
+
 from typing import Optional
 
 from pydantic import BaseModel
@@ -17,11 +19,16 @@ from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 
 
-# DataBase Model
 class User(Base):
-    """Model d'un utilisateur de l'API.
+    """Représente un utilisateur dans la base de données.
 
-    Hérite de Base.
+    Attributes:
+        id (int): Identifiant unique de l'utilisateur.
+        name (str): Nom de l'utilisateur.
+        email (str): Adresse e-mail unique de l'utilisateur.
+        role (str): Rôle de l'utilisateur.
+        hashed_pwd (str): Mot de passe haché.
+        is_active (bool): Indique si l'utilisateur est actif.
     """
     __tablename__ = "users"
 
@@ -34,9 +41,13 @@ class User(Base):
 
 
 class UserCreate(BaseModel):
-    """Model des données nécessaires pour créer un utilisateur.
+    """Données nécessaires pour créer un nouvel utilisateur.
 
-    Hérite de BaseModel.
+    Attributes:
+        name (str): Nom de l'utilisateur.
+        email (str): Adresse e-mail.
+        role (str): Rôle de l'utilisateur.
+        password (str): Mot de passe en clair.
     """
     name: str
     email: str
@@ -45,9 +56,14 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
-    """Model de la réponse de l'API lors d'une demande de vérification de l'utilisateur.
+    """Données renvoyées par l'API pour un utilisateur.
 
-    Hérite de BaseModel.
+    Attributes:
+        id (int): Identifiant unique de l'utilisateur.
+        name (str): Nom de l'utilisateur.
+        email (str): Adresse e-mail.
+        role (str): Rôle de l'utilisateur.
+        is_active (bool): Indique si l'utilisateur est actif.
     """
     id: int
     name: str
@@ -56,34 +72,36 @@ class UserResponse(BaseModel):
     is_active: bool
 
     class ConfigDict:
-        """
-        Class interne permet de configurer la forme des données.
-        """
+        """Configuration interne de Pydantic pour la conversion depuis SQLAlchemy."""
         from_attributes = True
 
 
-# New Pydantic Models
 class UserLogin(BaseModel):
-    """Model des données nécessaires pour se connecter.
+    """Données nécessaires pour se connecter à l'API.
 
-    Hérite de BaseModel.
+    Attributes:
+        email (str): Adresse e-mail de l'utilisateur.
+        password (str): Mot de passe en clair.
     """
     email: str
     password: str
 
 
 class Token(BaseModel):
-    """Model de réponse d'un jeton d'accès.
+    """Jeton d'accès renvoyé par l'API après authentification.
 
-    Hérite de BaseModel.
+    Attributes:
+        access_token (str): Valeur du jeton.
+        token_type (str): Type du jeton (ex: 'bearer').
     """
     access_token: str
     token_type: str
 
 
 class TokenData(BaseModel):
-    """Model d'une donnée contenu dans le jeton.
+    """Données extraites du jeton d'accès.
 
-    Hérite de BaseModel.
+    Attributes:
+        email (Optional[str]): Adresse e-mail associée au jeton.
     """
     email: Optional[str] = None
