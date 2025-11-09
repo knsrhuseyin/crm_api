@@ -41,6 +41,7 @@ manifest_cache: Dict = {}
 LAST_MOD = 0
 CACHE_LOCK = threading.Lock()
 
+
 # =======================
 # Fonctions utilitaires
 # =======================
@@ -55,7 +56,7 @@ def sha256_file(file_path: Path) -> str:
     """
     h = hashlib.sha256()
     with open(file_path, "rb") as f:
-        for chunk in iter(lambda: f.read(64*1024), b""):
+        for chunk in iter(lambda: f.read(64 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
 
@@ -73,10 +74,11 @@ def generate_manifest() -> dict:
     Returns:
         dict: Manifest complet du client.
     """
+    # S'assurer que le dossier CLIENT_DIR existe
     CLIENT_DIR.mkdir(parents=True, exist_ok=True)
 
     files = {}
-    for file_path in CLIENT_DIR.rglob("*"):
+    for file_path in sorted(CLIENT_DIR.rglob("*")):  # tri pour ordre stable
         if file_path.is_file():
             rel_path = file_path.relative_to(CLIENT_DIR).as_posix()
             files[rel_path] = sha256_file(file_path)
@@ -87,8 +89,9 @@ def generate_manifest() -> dict:
         "files": files
     }
 
+    # Écriture JSON stable : tri des clés, compact et uniforme
     with open(CACHE_FILE, "w") as f:
-        json.dump(manifest, f, indent=4)
+        json.dump(manifest, f, indent=4, sort_keys=True, separators=(',', ': '))
 
     return manifest
 
