@@ -72,7 +72,6 @@ def generate_manifest() -> dict:
     # Hash des fichiers
     files = {}
     for file_path in sorted(CLIENT_DIR.rglob("*")):
-        print(file_path)
         if file_path.is_file():
             rel_path = file_path.relative_to(CLIENT_DIR).as_posix()
             files[rel_path] = sha256_file(file_path)
