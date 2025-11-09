@@ -16,7 +16,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from API_DATABASE.auth import db_dependency, create_access_token, TOKEN_EXPIRES, verify_pwd, get_current_user
 from API_DATABASE.models import User, Token
 
-auth_router = APIRouter(prefix="/auth", tags=['auth'])
+auth_router = APIRouter(prefix="/auth", tags=['Auth API'])
 
 
 # Auth Endpoints
