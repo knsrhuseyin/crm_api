@@ -130,7 +130,7 @@ def create_zip_if_needed():
     with zipfile.ZipFile(ZIP_PATH, "w", zipfile.ZIP_DEFLATED) as zip_file:
         for file_path in sorted(Path(f"{CLIENT_DIR}/").rglob("*")):
             if file_path.is_file():
-                archive_name = file_path.relative_to(CLIENT_DIR.parent).as_posix()
+                archive_name = file_path.relative_to(CLIENT_DIR).as_posix()
                 zip_file.write(file_path, arcname=archive_name)
 
     # Met à jour LAST_MOD pour ne pas recréer inutilement
