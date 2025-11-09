@@ -104,6 +104,39 @@ def manifest_needs_update() -> bool:
         return True
     return False
 
+import zipfile
+
+ZIP_PATH = Path(f"{CLIENT_DIR.parent}/CRMClient.zip")
+
+def create_zip_if_needed():
+    """Crée le ZIP du client uniquement si nécessaire.
+
+    - Ne fait rien si le ZIP existe et que les fichiers n'ont pas changé.
+    - Utilise la date de modification des fichiers pour décider si une recréation est nécessaire.
+    """
+    # Vérifier que le dossier client existe
+    if not CLIENT_DIR.exists() or not any(CLIENT_DIR.iterdir()):
+        return FileNotFoundError(f"Dossier client {CLIENT_DIR} vide ou introuvable")
+
+    # Vérifie la dernière modification
+    latest_mtime = max((f.stat().st_mtime for f in CLIENT_DIR.rglob("*") if f.is_file()), default=0)
+
+    # Si le ZIP existe et qu'aucun fichier n'a été modifié depuis la dernière création, on ne touche à rien
+    if ZIP_PATH.exists() and latest_mtime <= LAST_MOD:
+        return
+
+    # Création du ZIP
+    ZIP_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(ZIP_PATH, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        for file_path in sorted(CLIENT_DIR.rglob("*")):
+            if file_path.is_file():
+                archive_name = file_path.relative_to(CLIENT_DIR.parent).as_posix()
+                zip_file.write(file_path, arcname=archive_name)
+
+    # Met à jour LAST_MOD pour ne pas recréer inutilement
+    global LAST_MOD
+    LAST_MOD = latest_mtime
+
 
 def update_manifest_cache():
     """Met à jour le manifest_cache si nécessaire.
@@ -112,6 +145,7 @@ def update_manifest_cache():
     - Génère le manifest uniquement si le cache est vide ou si des fichiers ont changé.
     """
     global manifest_cache
+    create_zip_if_needed()
     with CACHE_LOCK:
         if not manifest_cache or manifest_needs_update():
             manifest_cache = generate_manifest()
