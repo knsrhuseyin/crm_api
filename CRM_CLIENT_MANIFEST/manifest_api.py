@@ -73,6 +73,8 @@ def generate_manifest() -> dict:
     Returns:
         dict: Manifest complet du client.
     """
+    CLIENT_DIR.mkdir(parents=True, exist_ok=True)
+
     files = {}
     for file_path in CLIENT_DIR.rglob("*"):
         if file_path.is_file():
