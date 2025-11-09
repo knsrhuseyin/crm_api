@@ -4,16 +4,14 @@ import hashlib
 import json
 from typing import Dict
 
-from env_var import CLIENT_DIR, VERSION, DOWNLOAD_URL
-
-
-CONFIG_FILE = Path("/var/www/download_url/config.json")
+from env_var import CLIENT_DIR, CONFIG_DIR
 
 # =======================
 # Configuration
 # =======================
 CLIENT_DIR = Path(f"{CLIENT_DIR}/crm-client")
 CACHE_FILE = Path(f"{CLIENT_DIR}/manifest_cache.json")
+CONFIG_FILE = Path(CONFIG_DIR)
 
 # =======================
 # Variables cache
@@ -59,36 +57,30 @@ def sha256_file(file_path: Path) -> str:
 
 
 def generate_manifest() -> dict:
-    """Génère le manifest du client avec hash SHA256 de tous les fichiers.
+    """Génère le manifest du client avec hash SHA256 de tous les fichiers."""
 
-    Le manifest contient :
-        - version : version actuelle du client
-        - base_url : URL de base pour télécharger les fichiers
-        - files : dictionnaire {chemin relatif: hash SHA256}
-        - manifest_hash : hash SHA256 du manifest JSON lui-même (stable)
+    # Lire la config interne
+    config = read_internal_config()
+    version = config["version"]
+    download_url = config["download_url"]
 
-    Retourne également le sauvegarde dans CACHE_FILE pour debug ou vérification.
-
-    Returns:
-        dict: Manifest complet du client.
-    """
     # S'assurer que le dossier CLIENT_DIR existe
     CLIENT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Génération des hash des fichiers
+    # Hash des fichiers
     files = {}
-    for file_path in sorted(CLIENT_DIR.rglob("*")):  # tri pour ordre stable
+    for file_path in sorted(CLIENT_DIR.rglob("*")):
         if file_path.is_file():
             rel_path = file_path.relative_to(CLIENT_DIR).as_posix()
             files[rel_path] = sha256_file(file_path)
 
     manifest = {
-        "version": VERSION,
-        "download_url": DOWNLOAD_URL,
+        "version": version,
+        "download_url": download_url,
         "files": files
     }
 
-    # Écriture JSON stable dans le fichier cache
+    # Sauvegarde stable
     with open(CACHE_FILE, "w") as f:
         json.dump(manifest, f, indent=4, sort_keys=True)
 

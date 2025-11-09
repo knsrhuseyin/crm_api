@@ -19,5 +19,4 @@ ALGORITHM = os.getenv("ALGORITHM")
 TOKEN_EXPIRES = int(os.getenv("TOKEN_EXPIRES"))
 
 CLIENT_DIR = os.getenv("CLIENT_DIR")
-VERSION = os.getenv("VERSION")
-DOWNLOAD_URL = os.getenv("DOWNLOAD_URL")
+CONFIG_DIR = os.getenv("CONFIG_DIR")
