@@ -19,16 +19,14 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from typing_extensions import Any
 
-import utils
+import env_var
 from API_DATABASE.database import auth_db_engine, SessionAuthDB
 from API_DATABASE.models import User, Base, TokenData
 
 # Security Config
 SECRET_KEY = utils.SECRET_KEY
 ALGORITHM = utils.ALGORITHM
-TOKEN_EXPIRES = int(utils.TOKEN_EXPIRES)
-
-print(SECRET_KEY, ALGORITHM, TOKEN_EXPIRES)
+TOKEN_EXPIRES = int(env_var.TOKEN_EXPIRES)
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
