@@ -1,9 +1,10 @@
 import threading
-from pathlib import Path
+import zipfile
 import hashlib
 import json
-from typing import Dict
 
+from pathlib import Path
+from typing import Dict
 from env_var import CLIENT_DIR, CONFIG_FILE
 
 # =======================
@@ -12,6 +13,7 @@ from env_var import CLIENT_DIR, CONFIG_FILE
 CLIENT_DIR = Path(CLIENT_DIR)
 CACHE_FILE = Path(f"{CLIENT_DIR.parent}/manifest_cache.json")
 CONFIG_FILE = Path(CONFIG_FILE)
+ZIP_PATH = Path(f"{CLIENT_DIR.parent}/CRMClient.zip")
 
 # =======================
 # Variables cache
@@ -104,9 +106,6 @@ def manifest_needs_update() -> bool:
         return True
     return False
 
-import zipfile
-
-ZIP_PATH = Path(f"{CLIENT_DIR.parent}/CRMClient.zip")
 
 def create_zip_if_needed():
     """Crée le ZIP du client uniquement si nécessaire.
@@ -114,6 +113,7 @@ def create_zip_if_needed():
     - Ne fait rien si le ZIP existe et que les fichiers n'ont pas changé.
     - Utilise la date de modification des fichiers pour décider si une recréation est nécessaire.
     """
+    global LAST_MOD
     # Vérifier que le dossier client existe
     if not CLIENT_DIR.exists() or not any(CLIENT_DIR.iterdir()):
         return FileNotFoundError(f"Dossier client {CLIENT_DIR} vide ou introuvable")
@@ -134,7 +134,6 @@ def create_zip_if_needed():
                 zip_file.write(file_path, arcname=archive_name)
 
     # Met à jour LAST_MOD pour ne pas recréer inutilement
-    global LAST_MOD
     LAST_MOD = latest_mtime
 
 
