@@ -128,7 +128,7 @@ def create_zip_if_needed():
     # Création du ZIP
     ZIP_PATH.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(ZIP_PATH, "w", zipfile.ZIP_DEFLATED) as zip_file:
-        for file_path in sorted(CLIENT_DIR.rglob("/*")):
+        for file_path in sorted(Path(f"{CLIENT_DIR}/").rglob("*")):
             if file_path.is_file():
                 archive_name = file_path.relative_to(CLIENT_DIR.parent).as_posix()
                 zip_file.write(file_path, arcname=archive_name)
