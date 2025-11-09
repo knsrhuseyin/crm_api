@@ -30,8 +30,6 @@ manifest_router = APIRouter(prefix="/update", tags=['Update Client Version'])
 # Configuration
 # =======================
 CLIENT_DIR = Path(f"{CLIENT_DIR}/crm-client")
-VERSION = VERSION
-BASE_URL = DOWNLOAD_URL
 CACHE_FILE = Path(f"{CLIENT_DIR}/manifest_cache.json")
 
 # =======================
@@ -87,7 +85,7 @@ def generate_manifest() -> dict:
 
     manifest = {
         "version": VERSION,
-        "base_url": BASE_URL,
+        "download_url": DOWNLOAD_URL,
         "files": files
     }
 
