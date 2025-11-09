@@ -13,7 +13,7 @@ from API_DATABASE import auth_api
 from CRM_DATABASE import crm_api
 from CRM_CLIENT_MANIFEST import manifest_api
 
-app = FastAPI(title="CRM API", version="1.0")
+app = FastAPI(title="CRM API", version="1.1.0")
 app.include_router(auth_api.auth_router)
 app.include_router(crm_api.crm_router)
 app.include_router(manifest_api.manifest_router)
