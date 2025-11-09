@@ -68,6 +68,7 @@ def generate_manifest() -> dict:
         - version : version actuelle du client
         - base_url : URL de base pour télécharger les fichiers
         - files : dictionnaire {chemin relatif: hash SHA256}
+        - manifest_hash : hash SHA256 du manifest JSON lui-même (stable)
 
     Retourne également le sauvegarde dans CACHE_FILE pour debug ou vérification.
 
@@ -77,6 +78,7 @@ def generate_manifest() -> dict:
     # S'assurer que le dossier CLIENT_DIR existe
     CLIENT_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Génération des hash des fichiers
     files = {}
     for file_path in sorted(CLIENT_DIR.rglob("*")):  # tri pour ordre stable
         if file_path.is_file():
@@ -89,9 +91,14 @@ def generate_manifest() -> dict:
         "files": files
     }
 
-    # Écriture JSON stable : tri des clés, compact et uniforme
+    # Génération du hash du manifest de manière stable
+    manifest_json_bytes = json.dumps(manifest, sort_keys=True, separators=(',', ':')).encode('utf-8')
+    manifest_hash = hashlib.sha256(manifest_json_bytes).hexdigest()
+    manifest["manifest_hash"] = manifest_hash
+
+    # Écriture JSON stable dans le fichier cache
     with open(CACHE_FILE, "w") as f:
-        json.dump(manifest, f, indent=4, sort_keys=True, separators=(',', ': '))
+        json.dump(manifest, f, indent=4, sort_keys=True)
 
     return manifest
 
