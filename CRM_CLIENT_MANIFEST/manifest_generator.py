@@ -4,14 +4,14 @@ import hashlib
 import json
 from typing import Dict
 
-from env_var import CLIENT_DIR, CONFIG_DIR
+from env_var import CLIENT_DIR, CONFIG_FILE
 
 # =======================
 # Configuration
 # =======================
-CLIENT_DIR = Path(f"{CLIENT_DIR}/crm-client")
+CLIENT_DIR = Path(CLIENT_DIR)
 CACHE_FILE = Path(f"{CLIENT_DIR}/manifest_cache.json")
-CONFIG_FILE = Path(CONFIG_DIR)
+CONFIG_FILE = Path(CONFIG_FILE)
 
 # =======================
 # Variables cache

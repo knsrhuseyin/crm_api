@@ -17,9 +17,6 @@ Dependencies:
 
 from fastapi import APIRouter
 
-import threading
-from typing import Dict
-
 from CRM_CLIENT_MANIFEST.manifest_generator import update_manifest_cache
 
 manifest_router = APIRouter(prefix="/update", tags=['Update Client Version'])
