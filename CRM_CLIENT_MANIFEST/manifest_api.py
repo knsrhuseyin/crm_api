@@ -29,10 +29,10 @@ manifest_router = APIRouter()
 # =======================
 # Configuration
 # =======================
-CLIENT_DIR = Path(CLIENT_DIR + "crm-client")
+CLIENT_DIR = Path(f"{CLIENT_DIR}/crm-client")
 VERSION = VERSION
 BASE_URL = DOWNLOAD_URL
-CACHE_FILE = Path(CLIENT_DIR + "manifest_cache.json")
+CACHE_FILE = Path(f"{CLIENT_DIR}/manifest_cache.json")
 
 # =======================
 # Variables cache
