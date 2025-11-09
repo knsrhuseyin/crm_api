@@ -24,7 +24,7 @@ from typing import Dict
 
 from env_var import CLIENT_DIR, VERSION, DOWNLOAD_URL
 
-manifest_router = APIRouter()
+manifest_router = APIRouter(prefix="/update", tags=['Update Client Version'])
 
 # =======================
 # Configuration
@@ -124,7 +124,7 @@ def update_manifest_cache():
 # =======================
 # Endpoint API
 # =======================
-@manifest_router.get("/update/latest")
+@manifest_router.get("/latest")
 def latest_update():
     """Endpoint pour récupérer le manifest du client.
 
