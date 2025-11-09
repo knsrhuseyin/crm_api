@@ -145,9 +145,9 @@ def update_manifest_cache():
     - Génère le manifest uniquement si le cache est vide ou si des fichiers ont changé.
     """
     global manifest_cache
-    create_zip_if_needed()
     with CACHE_LOCK:
         if not manifest_cache or manifest_needs_update():
             manifest_cache = generate_manifest()
             return manifest_cache
+        create_zip_if_needed()
         return manifest_cache
