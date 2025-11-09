@@ -91,11 +91,6 @@ def generate_manifest() -> dict:
         "files": files
     }
 
-    # Génération du hash du manifest de manière stable
-    manifest_json_bytes = json.dumps(manifest, sort_keys=True, separators=(',', ':')).encode('utf-8')
-    manifest_hash = hashlib.sha256(manifest_json_bytes).hexdigest()
-    manifest["manifest_hash"] = manifest_hash
-
     # Écriture JSON stable dans le fichier cache
     with open(CACHE_FILE, "w") as f:
         json.dump(manifest, f, indent=4, sort_keys=True)
