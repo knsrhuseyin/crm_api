@@ -5,7 +5,6 @@ manifest_generator.py
 Module pour générer et gérer le manifest du client CRM, incluant :
 - Hash SHA256 des fichiers.
 - Manifest mis en cache pour éviter les recalculs inutiles.
-- Création d'un ZIP du client si nécessaire.
 
 Dependencies:
     threading, zipfile, hashlib, json, pathlib, typing
