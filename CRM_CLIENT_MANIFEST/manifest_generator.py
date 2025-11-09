@@ -10,7 +10,7 @@ from env_var import CLIENT_DIR, CONFIG_FILE
 # Configuration
 # =======================
 CLIENT_DIR = Path(CLIENT_DIR)
-CACHE_FILE = Path(f"{CLIENT_DIR}/manifest_cache.json")
+CACHE_FILE = Path(f"{CLIENT_DIR.parent}/manifest_cache.json")
 CONFIG_FILE = Path(CONFIG_FILE)
 
 # =======================
